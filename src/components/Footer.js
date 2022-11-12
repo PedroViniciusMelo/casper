@@ -3,7 +3,7 @@ import { FaGem, FaPaperPlane } from "react-icons/fa";
 
 export default function Footer(){
     return (
-        <footer className="text-center text-lg-start bg-light text-muted">
+        <footer className="text-center text-lg-start bg-light text-muted d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block">
             <section className="">
                 <div className="container text-center text-md-start mt-5">
                     <div className="row mt-3">
@@ -41,8 +41,7 @@ export default function Footer(){
                 </div>
             </section>
             <div className="text-center p-4" style={{backgroundColor: 'rgba(0, 0, 0, 0.05)'}}>
-                © 2022 Copyright:
-                <a className="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+                © 2022 Copyright
             </div>
         </footer>
     )

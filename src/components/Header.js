@@ -15,7 +15,7 @@ export default function Header() {
                     <div className="navbar-nav me-auto mb-2 mb-lg-0"/>
                     <div className="d-flex">
                         <Link className="btn btn-outline-success" to="login">Login</Link>
-                        <div className="nav-item dropdown">
+                        <div className="nav-item dropdown me-5">
                             <Link className="nav-link dropdown-toggle" to="#" id="navbarDropdown" role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
                                 Dropdown

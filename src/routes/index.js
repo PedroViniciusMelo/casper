@@ -24,14 +24,16 @@ export default function Routes() {
     return (
         <Router>
             <Header/>
-            <RouterRoutes path={"/"}>
-                <Route index element={<Home/>}/>
-                <Route path={'login'} element={<Login/>}/>
-                {
-                    user &&
-                    <Route path={'admin/*'} element={<Admin/>}/>
-                }
-            </RouterRoutes>
+            <div style={{marginTop: '3%', marginBottom: '6%'}}>
+                <RouterRoutes path={"/"}>
+                    <Route index element={<Home/>}/>
+                    <Route path={'login'} element={<Login/>}/>
+                    {
+                        user &&
+                        <Route path={'admin/*'} element={<Admin/>}/>
+                    }
+                </RouterRoutes>
+            </div>
             <Footer/>
         </Router>
 

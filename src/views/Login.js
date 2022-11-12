@@ -29,7 +29,7 @@ export default function Login() {
 
     return (
         <section className="vh-100">
-            <div className="container py-5 h-100">
+            <div className="container h-100">
                 <div className="row d-flex align-items-center justify-content-center h-100">
                     <div className="col-md-8 col-lg-7 col-xl-6">
                         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
@@ -56,18 +56,20 @@ export default function Login() {
                             <label className="form-label" htmlFor="form1Example23">Senha</label>
                         </div>
 
-                        {
-                            !loading && <button type="button" className="btn btn-primary btn-lg btn-block"
-                                                onClick={handleLogin}>Sign in</button>
-                        }
-                        <hr/>
-                        <div className="text-center">
-                            <p className="text-center fw-bold mx-3 mb-3 text-muted">OR</p>
+                        <div className="row mb-4">
+                            <div className="col-md-3">
+                                <button type="button" className="btn btn-primary btn-lg btn-block"
+                                        onClick={handleLogin}>Log in</button>
+                            </div>
+                            <div className="col-md-1 text-center">
 
-                            <button className="btn btn-primary btn-lg btn-block" style={{backgroundColor: "#3b5998"}}
-                                    type={"button"}>
-                                <FaFacebook/>Continue with Facebook
-                            </button>
+                            </div>
+                            <div className="col-md-8">
+                                <button className="btn btn-primary btn-lg btn-block text-center" style={{backgroundColor: "#3b5998"}}
+                                        type={"button"}>
+                                    <FaFacebook className={"me-2"}/>Continue com o Facebook
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
