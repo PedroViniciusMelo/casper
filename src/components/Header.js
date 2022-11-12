@@ -10,6 +10,9 @@ export default function Header() {
                 <Link className="navbar-brand" to="/">
                     <BsFillChatDotsFill/> Caster
                 </Link>
+                <Link style={{fontSize: '12pt'}} className="navbar-brand" to="admin">
+                     Admin
+                </Link>
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <div className="navbar-nav me-auto mb-2 mb-lg-0"/>

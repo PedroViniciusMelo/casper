@@ -16,6 +16,7 @@ export default function Login() {
             .then(() => {
                 setLogged(true)
                 setLoading(false)
+                alert("Login realizado com sucesso!")
             })
             .catch(() => {
                 setLogged(false)
@@ -41,19 +42,21 @@ export default function Login() {
                         </div>
 
                         <div className="form-outline mb-4">
+                            <label className="form-label" htmlFor="form1Example13">Email</label>
                             <input type="email" id="form1Example13" className="form-control form-control-lg"
                                    value={email} onChange={e => {
                                 setEmail(e.target.value)
                             }}/>
-                            <label className="form-label" htmlFor="form1Example13">Email</label>
+
                         </div>
 
                         <div className="form-outline mb-4">
+                            <label className="form-label" htmlFor="form1Example23">Senha</label>
                             <input type="password" id="form1Example23" className="form-control form-control-lg"
                                    value={password} onChange={e => {
                                 setPassword(e.target.value)
                             }}/>
-                            <label className="form-label" htmlFor="form1Example23">Senha</label>
+
                         </div>
 
                         <div className="row mb-4">
