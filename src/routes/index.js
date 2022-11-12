@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import {BrowserRouter as Router, Routes as RouterRoutes, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Routes as RouterRoutes, Route} from "react-router-dom";
 import Home from "../views/Home";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth} from "../firebase/config";
