@@ -6,9 +6,11 @@ import Home from "../views/Home";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth} from "../firebase/config";
 import Admin from "./Admin";
+import Login from "../views/Login";
 
 export default function Routes() {
     const [user, setUser] = useState(null);
+
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -24,6 +26,7 @@ export default function Routes() {
             <Header/>
             <RouterRoutes path={"/"}>
                 <Route index element={<Home/>}/>
+                <Route path={'login'} element={<Login/>}/>
                 {
                     user &&
                     <Route path={'admin/*'} element={<Admin/>}/>
