@@ -6,7 +6,7 @@ export default function Admin() {
     return (
         <Routes>
             <Route path={"/"} element={<Admin/>}>
-                <Route path={"/portifolio"} element={<EditNews/>}/>
+                <Route path={"/edit"} element={<EditNews/>}/>
             </Route>
         </Routes>
     )
