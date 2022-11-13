@@ -3,7 +3,7 @@ import { FaGem, FaPaperPlane } from "react-icons/fa";
 
 export default function Footer(){
     return (
-        <footer className="text-center text-lg-start bg-light text-muted d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block">
+        <footer className="text-center text-lg-start bg-light text-muted d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block pt-1">
             <section className="">
                 <div className="container text-center text-md-start mt-5">
                     <div className="row mt-3">
@@ -12,7 +12,7 @@ export default function Footer(){
                                 <FaGem className="me-1"/>Caster - Elife
                             </h6>
                             <p>
-                                Sistema de gerenciamento de notícias do firebase. Desenvolvido por <a href="https://github.com/PedroViniciusMelo">Pedro Vinícius</a>. Tem alguma dúvida? Entre em contato comigo.
+                                Sistema de gerenciamento de notícias do firebase. Desenvolvido por <a href="https://github.com/PedroViniciusMelo">Pedro Vinícius</a> como estagirário na <a href="https://elife.com.br/">Elife</a>. Tem alguma dúvida? Entre em contato comigo.
                             </p>
                         </div>
 

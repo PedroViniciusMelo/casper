@@ -8,6 +8,7 @@ import {auth} from "../firebase/config";
 import Login from "../views/Login";
 import AdminHome from "../views/AdminHome";
 import ViewNews from "../views/ViewNews";
+import NotFoud from "../util/NotFoud";
 
 export default function Routes() {
     const [user, setUser] = useState(null);
@@ -20,12 +21,11 @@ export default function Routes() {
                 setUser(null)
             }
         })
-        setUser(true)
     }, [])
 
     return (
         <Router>
-            <Header/>
+            <Header user={user}/>
             <div style={{marginTop: '3%', marginBottom: '6%'}}>
                 <RouterRoutes path={"/"}>
                     <Route index element={<Home/>}/>
@@ -36,9 +36,7 @@ export default function Routes() {
                             <Route path={"view/:id"} element={<ViewNews/>}/>
                         </>
                     )}
-
-                    <Route path={'*'} element={<h1>404</h1>}/>
-
+                    <Route path={'*'} element={<NotFoud/>}/>
                 </RouterRoutes>
             </div>
             <Footer/>

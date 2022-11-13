@@ -187,9 +187,10 @@ export default function AdminHome() {
                             <select value={geralUpdateData.categoria} onChange={handleTextChangeUpdate("categoria")} name={"categoria"}
                                     className="form-select" aria-label="Default select example">
                                 <option value={'-1'} disabled>Selecione a categoria da notícia</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
+                                <option value="Esportes">Esportes</option>
+                                <option value="Política">Política</option>
+                                <option value="Entretenimento">Entretenimento</option>
+                                <option value="Famosos">Famosos</option>
                             </select>
 
                             <label htmlFor="descricao" className="form-label">Descrição</label>
