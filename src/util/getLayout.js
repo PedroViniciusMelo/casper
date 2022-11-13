@@ -10,6 +10,8 @@ const Icon = ( { name } ) => {
             return <MdOutlineShield/>;
         case 'Entretenimento':
             return <MdOutlineInsertEmoticon/>;
+        default:
+            throw new Error( 'Invalid name' );
     }
 }
 
@@ -23,5 +25,12 @@ const getLayout = ( name ) => {
             return 'text-danger';
         case 'Entretenimento':
             return 'text-warning';
+        default:
+            throw new Error( 'Invalid name' );
     }
+}
+
+export {
+    Icon,
+    getLayout
 }

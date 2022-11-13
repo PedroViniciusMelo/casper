@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {onValue, ref as dbRef} from "firebase/database";
 import {db} from "../firebase/config";
-import loading from "../assets/loading.gif";
 import loading2 from "../assets/loading2.gif";
+import {Icon, getLayout} from "../util/getLayout";
 
 export default function Home() {
     const [noticias, setNoticias] = useState([]);
@@ -20,32 +20,33 @@ export default function Home() {
     return (
         <div className="container">
             <section>
-                <div className="row gx-lg-5">
+                <div className="row gx-lg-5 d-flex" style={{justifyContent: "space-evenly"}}>
                     {isLoading && <img src={loading2} alt={"loading"}/>}
                     {
-                        Object.keys(noticias)
+                        noticias && Object.keys(noticias)
                             .map((key) => {
                                 return (
-                                    <div key={key} className="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                    <div key={key} className="col-lg-3 col-md-12 mb-4 mb-1 me-3" style={{backgroundColor: 'white', borderRadius: 50, overflow: 'hidden'}}>
                                         <div>
                                             <div
                                                 className="bg-image hover-overlay shadow-1-strong ripple rounded-5 mb-4"
                                                 data-mdb-ripple-color="light">
                                                 <img alt={"teste de imnage"}
+                                                     style={{height: 300, width: '100%', objectFit: 'cover'}}
                                                      src={noticias[key].image}
                                                      className="img-fluid"/>
-                                                <Link className={"text-decoration-none"} to="#!">
+                                                <div className={"text-decoration-none"}>
                                                     <div className="mask"
                                                          style={{backgroundColor: 'rgba(251, 251, 251, 0.15)'}}></div>
-                                                </Link>
+                                                </div>
                                             </div>
 
                                             <div className="row mb-3">
                                                 <div className="col-6">
-                                                    <Link to="#" className="text-info text-decoration-none">
-                                                        <i className="fas fa-plane"></i>
+                                                    <p className={`text-decoration-none ${getLayout(noticias[key].categoria)}`}>
+                                                        <Icon name={noticias[key].categoria} />
                                                         {noticias[key].categoria}
-                                                    </Link>
+                                                    </p>
                                                 </div>
                                             </div>
 
@@ -53,7 +54,8 @@ export default function Home() {
                                                 <h5>{noticias[key].titulo}</h5>
 
                                                 <p>
-                                                    {noticias[key].descricao}
+                                                    {noticias[key].descricao.slice(0, 400)}...
+                                                    <span className={"text-primary"}>Ler mais</span>
                                                 </p>
                                             </Link>
 

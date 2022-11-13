@@ -1,12 +1,13 @@
 import React, {useState, useRef, useEffect} from "react";
-import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
-import {storage, db} from "../firebase/config";
+import {ref, uploadBytes, getDownloadURL, deleteObject} from "firebase/storage";
+import {storage, db, auth} from "../firebase/config";
 import {ref as dbRef, push, update, onValue, remove} from "firebase/database";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {toast, ToastContainer} from "react-toastify";
 import FAB from "../components/FloatingButton";
 import {MdAdd} from "react-icons/md";
 import Modal from 'react-bootstrap/Modal';
+import {onAuthStateChanged} from "firebase/auth";
 
 export default function AdminHome() {
     const [geralData, setGeralData] = useState({
@@ -26,6 +27,15 @@ export default function AdminHome() {
     const [noticias, setNoticias] = useState([]);
     const [updateModal, setUpdateModal] = useState(false);
     const [saveModal, setSaveModal] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                navigate("../login")
+            }
+        })
+    }, [navigate])
 
     useEffect(() => {
         onValue(dbRef(db, 'noticias'), (snapshot) => {
@@ -56,7 +66,7 @@ export default function AdminHome() {
     }
 
     const handleSubmit = async () => {
-        if(validateForm()) {
+        if (validateForm()) {
             toast.warning('Aguarde, em um momento criaremos sua notícia!', {
                 position: "bottom-left",
                 autoClose: 5000,
@@ -69,7 +79,7 @@ export default function AdminHome() {
             });
 
             const file = image.current.files[0];
-            const storageRef = ref(storage, file.name);
+            const storageRef = ref(storage, "images/" + file.name);
 
             await uploadBytes(storageRef, file)
 
@@ -77,7 +87,7 @@ export default function AdminHome() {
 
             const key = push(dbRef(db, 'noticias')).key;
 
-            await update(dbRef(db, 'noticias/' + key), {image: imageURL, ...geralData})
+            await update(dbRef(db, 'noticias/' + key), {image: imageURL, file: file.name, ...geralData})
 
             toast.success('Eba! Notícia criada com sucesso!', {
                 position: "bottom-left",
@@ -90,7 +100,7 @@ export default function AdminHome() {
                 theme: "colored",
             });
             setSaveModal(false)
-        }else{
+        } else {
             toast.error('Preencha todos os campos!', {
                 position: "bottom-left",
                 autoClose: 5000,
@@ -105,25 +115,45 @@ export default function AdminHome() {
 
     }
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id, fileName) => {
         let a = window.confirm("Tem certeza que deseja deletar essa notícia?")
         if (a) {
-            await remove(dbRef(db, 'noticias/' + id))
-            toast.success('Notícia removida com sucesso!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+            const storageRef = ref(storage, 'images/' + fileName)
+
+            deleteObject(storageRef)
+                .catch(() => {
+                    toast.error('Aconteceu um erro ao deletar o arquivo!', {
+                        position: "bottom-left",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    })
+                }).then(() => {
+
+                remove(dbRef(db, 'noticias/' + id))
+                    .then(() => {
+                        toast.success('Notícia removida com sucesso!', {
+                            position: "bottom-left",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        })
+                    })
+            })
+
         }
     }
 
     const handleUpdate = async () => {
-        if(validateUpdateForm()) {
+        if (validateUpdateForm()) {
             toast.warning('Aguarde, em um momento atualizaremos sua notícia!', {
                 position: "bottom-left",
                 autoClose: 5000,
@@ -142,7 +172,10 @@ export default function AdminHome() {
 
                 const imageURL = await getDownloadURL(storageRef)
 
-                await update(dbRef(db, 'noticias/' + selectedKey), {image: imageURL, ...geralUpdateData})
+                await update(dbRef(db, 'noticias/' + selectedKey), {
+                    image: imageURL,
+                    file: file.name, ...geralUpdateData
+                })
             } else {
                 await update(dbRef(db, 'noticias/' + selectedKey), geralUpdateData)
             }
@@ -157,7 +190,7 @@ export default function AdminHome() {
                 progress: undefined,
                 theme: "colored",
             });
-        }else{
+        } else {
             toast.error('Preencha todos os campos com informações válidas!', {
                 position: "bottom-left",
                 autoClose: 5000,
@@ -225,7 +258,7 @@ export default function AdminHome() {
                                         <td>
                                             <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
                                                 <button className={"btn btn-danger"}
-                                                        onClick={() => handleDelete(key)}>Excluir
+                                                        onClick={() => handleDelete(key, noticias[key].file)}>Excluir
                                                 </button>
                                                 <button className={"btn btn-warning"} data-bs-toggle="modal"
                                                         data-bs-target="#editmodal" onClick={() => {
@@ -284,12 +317,14 @@ export default function AdminHome() {
                     <div className="input-group">
                         <input onChange={handleTextChange("imagem")} ref={image} name={"Imagem"} type="file"
                                className="form-control"
+                               accept={"image/*"}
                                id="inputGroupFile04"
                                aria-describedby="inputGroupFileAddon04" aria-label="Upload"/>
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setSaveModal(false)}>Fechar
+                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal"
+                            onClick={() => setSaveModal(false)}>Fechar
                     </button>
                     <button type="button" className="btn btn-primary"
                             onClick={handleSubmit}>Salvar
@@ -297,7 +332,6 @@ export default function AdminHome() {
                 </Modal.Footer>
 
             </Modal>
-
 
 
             <Modal show={updateModal} onHide={() => setUpdateModal(false)}>
@@ -328,7 +362,8 @@ export default function AdminHome() {
 
                     <label htmlFor="descricao" className="form-label">Descrição</label>
                     <div className="input-group">
-                                <textarea value={geralUpdateData.descricao} onChange={handleTextChangeUpdate("descricao")}
+                                <textarea value={geralUpdateData.descricao}
+                                          onChange={handleTextChangeUpdate("descricao")}
                                           className="form-control"
                                           aria-label="With textarea"></textarea>
                     </div>
@@ -337,6 +372,7 @@ export default function AdminHome() {
                     <div className="input-group">
                         <input ref={imageUpdate} name={"Imagem"} type="file" className="form-control"
                                id="inputGroupFile04"
+                               accept={"image/*"}
                                aria-describedby="inputGroupFileAddon04" aria-label="Upload"/>
                     </div>
                     <label htmlFor="descricao" className="form-label">Imagem anterior</label>
