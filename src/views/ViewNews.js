@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {onValue, ref as dbRef} from "firebase/database";
-import {db} from "../../firebase/config";
+import {db} from "../firebase/config";
 
 export default function ViewNews() {
     let {id} = useParams();

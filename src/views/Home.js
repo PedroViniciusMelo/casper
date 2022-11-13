@@ -2,14 +2,18 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {onValue, ref as dbRef} from "firebase/database";
 import {db} from "../firebase/config";
+import loading from "../assets/loading.gif";
+import loading2 from "../assets/loading2.gif";
 
 export default function Home() {
     const [noticias, setNoticias] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         onValue(dbRef(db, 'noticias'), (snapshot) => {
             const data = snapshot.val();
             setNoticias(data);
+            setIsLoading(false);
         })
     }, [])
 
@@ -17,6 +21,7 @@ export default function Home() {
         <div className="container">
             <section>
                 <div className="row gx-lg-5">
+                    {isLoading && <img src={loading2} alt={"loading"}/>}
                     {
                         Object.keys(noticias)
                             .map((key) => {

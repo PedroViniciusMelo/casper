@@ -6,8 +6,8 @@ import Home from "../views/Home";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth} from "../firebase/config";
 import Login from "../views/Login";
-import AdminHome from "../views/admin/AdminHome";
-import ViewNews from "../views/admin/ViewNews";
+import AdminHome from "../views/AdminHome";
+import ViewNews from "../views/ViewNews";
 
 export default function Routes() {
     const [user, setUser] = useState(null);
@@ -30,9 +30,15 @@ export default function Routes() {
                 <RouterRoutes path={"/"}>
                     <Route index element={<Home/>}/>
                     <Route path={'login'} element={<Login/>}/>
-                    <Route path={'admin'} element={<AdminHome/>}/>
+                    {user && (
+                        <>
+                            <Route path={'admin'} element={<AdminHome/>}/>
+                            <Route path={"view/:id"} element={<ViewNews/>}/>
+                        </>
+                    )}
+
                     <Route path={'*'} element={<h1>404</h1>}/>
-                    <Route path={"view/:id"} element={<ViewNews/>}/>
+
                 </RouterRoutes>
             </div>
             <Footer/>
