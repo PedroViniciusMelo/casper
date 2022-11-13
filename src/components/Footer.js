@@ -12,7 +12,7 @@ export default function Footer(){
                                 <FaGem className="me-1"/>Caster - Elife
                             </h6>
                             <p>
-                                Sistema de gerenciamento de notícias do firebase. Desenvolvido por <a href="https://github.com/PedroViniciusMelo">Pedro Vinícius</a> como estagirário na <a href="https://elife.com.br/">Elife</a>. Tem alguma dúvida? Entre em contato comigo.
+                                Sistema de gerenciamento de notícias do firebase. Desenvolvido por <a href="https://github.com/PedroViniciusMelo">Pedro Vinícius</a> como estagiário na <a href="https://elife.com.br/">Elife</a>. Tem alguma dúvida? Entre em contato comigo.
                             </p>
                         </div>
 

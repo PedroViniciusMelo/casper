@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from "react";
-import {signInWithEmailAndPassword, onAuthStateChanged, signOut} from 'firebase/auth';
+import {signInWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth';
 import {auth} from "../firebase/config";
 import {FaFacebook} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
 import loading2 from "../assets/loading2.gif";
-import NotFoud from "../util/NotFoud";
+import {ToastContainer, toast} from 'react-toastify';
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -20,24 +20,55 @@ export default function Login() {
             .then(() => {
                 setLogged(true)
                 setLoading(false)
-                alert("Login realizado com sucesso!")
             })
             .catch(() => {
                 setLogged(false)
                 setLoading(false)
+                toast.error('Aconteceu algum erro, senha ou email inválido. Tente novamente!', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             });
     }
 
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setLogged(true)
+            } else {
+                setLogged(false)
+            }
+        })
+    }, [])
 
-    if(logged){
+
+    if (logged) {
         navigate('../admin')
     }
     return (
-        <section className="vh-100">
-            <div className="container h-100">
-                {
-                    !loading ?
-                        (
+        <>
+            <ToastContainer
+                position="bottom-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
+            {
+                loading ? <img src={loading2} style={{height: '100%', width: '100%'}} alt={"Loading"}/> :
+                    <section className="vh-100">
+                        <div className="container h-100">
                             <div className="row d-flex align-items-center justify-content-center h-100">
                                 <div className="col-md-8 col-lg-7 col-xl-6">
                                     <img
@@ -88,10 +119,10 @@ export default function Login() {
                                     </div>
                                 </div>
                             </div>
-                        ) :
-                        <img src={loading2} alt={"Loading"}/>
-                }
-            </div>
-        </section>
+                        </div>
+                    </section>
+            }
+
+        </>
     )
 }
