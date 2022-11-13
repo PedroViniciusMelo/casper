@@ -9,10 +9,10 @@ export default function Footer(){
                     <div className="row mt-3">
                         <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
                             <h6 className="text-uppercase fw-bold mb-4">
-                                <FaGem className="me-1"/>Caster - Elife
+                                <FaGem className="me-1"/>Casper
                             </h6>
                             <p>
-                                Sistema de gerenciamento de notícias do firebase. Desenvolvido por <a href="https://github.com/PedroViniciusMelo">Pedro Vinícius</a> como estagiário na <a href="https://elife.com.br/">Elife</a>. Tem alguma dúvida? Entre em contato comigo.
+                                Sistema de gerenciamento de notícias do firebase. Desenvolvido por <a href="https://github.com/PedroViniciusMelo">Pedro Vinícius</a>. Tem alguma dúvida? Entre em contato comigo.
                             </p>
                         </div>
 

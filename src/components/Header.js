@@ -15,7 +15,7 @@ export default function Header({user}) {
         <nav className="navbar navbar-expand-lg navbar-light bg-light mr-5">
             <div className="container-fluid">
                 <Link className="navbar-brand" style={{display: 'flex', alignItems: 'center'}} to="/">
-                    <BsFillChatDotsFill className={"me-1"}/> Caster
+                    <BsFillChatDotsFill className={"me-1"}/> Casper
                 </Link>
 
 

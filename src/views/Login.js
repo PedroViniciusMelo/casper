@@ -101,20 +101,14 @@ export default function Login() {
                                     </div>
 
                                     <div className="row mb-4">
-                                        <div className="col-md-3">
+                                        <div className="col-md-4">
                                             <button type="button" className="btn btn-primary btn-lg btn-block"
                                                     onClick={handleLogin}>Log in
                                             </button>
                                         </div>
-                                        <div className="col-md-1 text-center">
 
-                                        </div>
                                         <div className="col-md-8">
-                                            <button className="btn btn-primary btn-lg btn-block text-center"
-                                                    style={{backgroundColor: "#3b5998"}}
-                                                    type={"button"}>
-                                                <FaFacebook className={"me-2"}/>Continue com o Facebook
-                                            </button>
+
                                         </div>
                                     </div>
                                 </div>

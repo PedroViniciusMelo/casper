@@ -231,7 +231,7 @@ export default function AdminHome() {
             <div className="card">
                 <h5 className="card-header">Notícias</h5>
                 <div className="card-body">
-                    <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                    <div className={"table-responsive"}>
                         <table className="table table-striped table-hover">
                             <thead>
                             <tr style={{backgroundColor: 'blue', color: 'white'}}>
