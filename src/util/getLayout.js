@@ -2,31 +2,27 @@ import {MdSportsBasketball, MdPeople, MdOutlineShield, MdOutlineInsertEmoticon} 
 
 const Icon = ( { name } ) => {
     switch ( name ) {
-        case 'Esportes':
+        case 'esportes':
             return <MdSportsBasketball/>;
-        case 'Famosos':
+        case 'famosos':
             return <MdPeople/>;
-        case 'Política':
+        case 'politica':
             return <MdOutlineShield/>;
-        case 'Entretenimento':
+        case 'entretenimento':
             return <MdOutlineInsertEmoticon/>;
-        default:
-            throw new Error( 'Invalid name' );
     }
 }
 
 const getLayout = ( name ) => {
     switch ( name ) {
-        case 'Esportes':
+        case 'esportes':
             return 'text-primary';
-        case 'Famosos':
+        case 'famosos':
             return 'text-success';
-        case 'Política':
+        case 'politica':
             return 'text-danger';
-        case 'Entretenimento':
+        case 'entretenimento':
             return 'text-warning';
-        default:
-            throw new Error( 'Invalid name' );
     }
 }
 

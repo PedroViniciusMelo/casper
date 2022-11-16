@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {signInWithEmailAndPassword, onAuthStateChanged} from 'firebase/auth';
 import {auth} from "../firebase/config";
-import {FaFacebook} from "react-icons/fa";
 import {useNavigate} from "react-router-dom";
 import loading2 from "../assets/loading2.gif";
 import {ToastContainer, toast} from 'react-toastify';

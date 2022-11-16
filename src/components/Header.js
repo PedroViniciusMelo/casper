@@ -1,6 +1,6 @@
 import React from "react";
 import {BsFillChatDotsFill} from "react-icons/bs";
-import {Link, redirect} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {BsFillArrowRightCircleFill, BsFillArrowLeftCircleFill} from "react-icons/bs";
 import {signOut} from "firebase/auth";
 import {auth} from "../firebase/config";

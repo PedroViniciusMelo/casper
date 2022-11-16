@@ -40,7 +40,7 @@ export default function AdminHome() {
     useEffect(() => {
         onValue(dbRef(db, 'noticias'), (snapshot) => {
             const data = snapshot.val();
-            setNoticias(data);
+            setNoticias(flaternObject(data));
         })
     }, [])
 
@@ -85,9 +85,9 @@ export default function AdminHome() {
 
             const imageURL = await getDownloadURL(storageRef)
 
-            const key = push(dbRef(db, 'noticias')).key;
+            const key = push(dbRef(db, 'noticias/' + geralData.categoria)).key;
 
-            await update(dbRef(db, 'noticias/' + key), {image: imageURL, file: file.name, ...geralData})
+            await update(dbRef(db, 'noticias/' + geralData.categoria + "/" + key), {image: imageURL, file: file.name, ...geralData})
 
             toast.success('Eba! Notícia criada com sucesso!', {
                 position: "bottom-left",
@@ -115,7 +115,7 @@ export default function AdminHome() {
 
     }
 
-    const handleDelete = async (id, fileName) => {
+    const handleDelete = async (id, fileName, tipo) => {
         let a = window.confirm("Tem certeza que deseja deletar essa notícia?")
         if (a) {
             const storageRef = ref(storage, 'images/' + fileName)
@@ -134,7 +134,7 @@ export default function AdminHome() {
                     })
                 }).then(() => {
 
-                remove(dbRef(db, 'noticias/' + id))
+                remove(dbRef(db, 'noticias/' + tipo + "/" + id))
                     .then(() => {
                         toast.success('Notícia removida com sucesso!', {
                             position: "bottom-left",
@@ -150,6 +150,15 @@ export default function AdminHome() {
             })
 
         }
+    }
+
+    //create a function to and objects into a single object
+    const flaternObject = (object) => {
+        let objeto = {};
+        for (let key in object) {
+            objeto = {...objeto, ...object[key]}
+        }
+        return objeto;
     }
 
     const handleUpdate = async () => {
@@ -172,12 +181,12 @@ export default function AdminHome() {
 
                 const imageURL = await getDownloadURL(storageRef)
 
-                await update(dbRef(db, 'noticias/' + selectedKey), {
+                await update(dbRef(db, 'noticias/' + geralUpdateData.categoria + "/" + selectedKey), {
                     image: imageURL,
                     file: file.name, ...geralUpdateData
                 })
             } else {
-                await update(dbRef(db, 'noticias/' + selectedKey), geralUpdateData)
+                await update(dbRef(db, 'noticias/' + geralUpdateData.categoria + "/" + selectedKey), geralUpdateData)
             }
 
             toast.success('Eba! Notícia atualizada com sucesso!', {
@@ -253,7 +262,7 @@ export default function AdminHome() {
                                         <td>{noticias[key].descricao.slice(0, 40)}...</td>
                                         <td>{noticias[key].categoria}</td>
                                         <td><a href={noticias[key].image}>Acessar imagem</a></td>
-                                        <td><Link className={"btn btn-success"} to={"../view/" + key}>Visualizar</Link>
+                                        <td><Link className={"btn btn-success"} to={"../view/" + noticias[key].categoria + "/" + key}>Visualizar</Link>
                                         </td>
                                         <td>
                                             <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
@@ -300,10 +309,10 @@ export default function AdminHome() {
                             name={"categoria"}
                             className="form-select" aria-label="Default select example">
                         <option value={'-1'} disabled>Selecione a categoria da notícia</option>
-                        <option value="Esportes">Esportes</option>
-                        <option value="Política">Política</option>
-                        <option value="Entretenimento">Entretenimento</option>
-                        <option value="Famosos">Famosos</option>
+                        <option value="esportes">Esportes</option>
+                        <option value="politica">Política</option>
+                        <option value="entretenimento">Entretenimento</option>
+                        <option value="famosos">Famosos</option>
                     </select>
 
                     <label htmlFor="descricao" className="form-label">Descrição</label>
@@ -354,10 +363,10 @@ export default function AdminHome() {
                             name={"categoria"}
                             className="form-select" aria-label="Default select example">
                         <option value={'-1'} disabled>Selecione a categoria da notícia</option>
-                        <option value="Esportes">Esportes</option>
-                        <option value="Política">Política</option>
-                        <option value="Entretenimento">Entretenimento</option>
-                        <option value="Famosos">Famosos</option>
+                        <option value="esportes">Esportes</option>
+                        <option value="politica">Política</option>
+                        <option value="entretenimento">Entretenimento</option>
+                        <option value="famosos">Famosos</option>
                     </select>
 
                     <label htmlFor="descricao" className="form-label">Descrição</label>

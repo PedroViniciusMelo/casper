@@ -30,7 +30,8 @@ export default function Routes() {
                     <Route index element={<Home/>}/>
                     <Route path={'login'} element={<Login/>}/>
                     <Route path={'admin'} element={<AdminHome/>}/>
-                    <Route path={"view/:id"} element={<ViewNews/>}/>
+                    <Route path={'esportes'} element={<AdminHome/>}/>
+                    <Route path={"view/:tipo/:id"} element={<ViewNews/>}/>
                 </RouterRoutes>
             </div>
             <Footer/>

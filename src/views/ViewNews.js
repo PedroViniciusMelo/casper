@@ -5,17 +5,17 @@ import {db} from "../firebase/config";
 import {getLayout, Icon} from "../util/getLayout";
 
 export default function ViewNews() {
-    let {id} = useParams();
+    let {id, tipo} = useParams();
     const [news, setNews] = useState();
 
     useEffect(() => {
-        onValue(dbRef(db, 'noticias/' + id), (snapshot) => {
+        onValue(dbRef(db, 'noticias/' + tipo.toLowerCase() + "/" + id), (snapshot) => {
             const data = snapshot.val();
             setNews(data);
         })
-    }, [id])
+    }, [id, tipo])
 
-    console.log(news)
+
     return(
         <div className={"container"}>
             <div className="row gx-5">
