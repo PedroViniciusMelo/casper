@@ -87,7 +87,10 @@ export default function AdminHome() {
 
             const key = push(dbRef(db, 'noticias/' + geralData.categoria)).key;
 
-            await update(dbRef(db, 'noticias/' + geralData.categoria + "/" + key), {image: imageURL, file: file.name, ...geralData})
+            await update(dbRef(db, 'noticias/' + geralData.categoria + "/" + key), {
+                image: imageURL,
+                file: file.name, ...geralData
+            })
 
             toast.success('Eba! Notícia criada com sucesso!', {
                 position: "bottom-left",
@@ -120,6 +123,17 @@ export default function AdminHome() {
         if (a) {
             const storageRef = ref(storage, 'images/' + fileName)
 
+            toast.warning('Aguarde, em um momento deletaremos sua notícia!', {
+                position: "bottom-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+
             deleteObject(storageRef)
                 .catch(() => {
                     toast.error('Aconteceu um erro ao deletar o arquivo!', {
@@ -132,22 +146,22 @@ export default function AdminHome() {
                         progress: undefined,
                         theme: "colored",
                     })
-                }).then(() => {
-
-                remove(dbRef(db, 'noticias/' + tipo + "/" + id))
-                    .then(() => {
-                        toast.success('Notícia removida com sucesso!', {
-                            position: "bottom-left",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "colored",
+                })
+                .then(() => {
+                    remove(dbRef(db, 'noticias/' + tipo + "/" + id))
+                        .then(() => {
+                            toast.success('Notícia removida com sucesso!', {
+                                position: "bottom-left",
+                                autoClose: 5000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "colored",
+                            })
                         })
-                    })
-            })
+                })
 
         }
     }
@@ -199,6 +213,7 @@ export default function AdminHome() {
                 progress: undefined,
                 theme: "colored",
             });
+            setUpdateModal(false)
         } else {
             toast.error('Preencha todos os campos com informações válidas!', {
                 position: "bottom-left",
@@ -262,12 +277,13 @@ export default function AdminHome() {
                                         <td>{noticias[key].descricao.slice(0, 40)}...</td>
                                         <td>{noticias[key].categoria}</td>
                                         <td><a href={noticias[key].image}>Acessar imagem</a></td>
-                                        <td><Link className={"btn btn-success"} to={"../view/" + noticias[key].categoria + "/" + key}>Visualizar</Link>
+                                        <td><Link className={"btn btn-success"}
+                                                  to={"../view/" + noticias[key].categoria + "/" + key}>Visualizar</Link>
                                         </td>
                                         <td>
                                             <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
                                                 <button className={"btn btn-danger"}
-                                                        onClick={() => handleDelete(key, noticias[key].file)}>Excluir
+                                                        onClick={() => handleDelete(key, noticias[key].file, noticias[key].categoria)}>Excluir
                                                 </button>
                                                 <button className={"btn btn-warning"} data-bs-toggle="modal"
                                                         data-bs-target="#editmodal" onClick={() => {

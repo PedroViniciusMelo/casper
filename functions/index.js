@@ -40,11 +40,10 @@ app.post('/', (req, res) => {
 
     }
 
-
     ref.once("value", function (snapshot) {
         let noticias = snapshot.val()
 
-        if(Object.keys(noticias).length === 0){
+        if (!noticias || Object.keys(noticias).length === 0) {
             res.send(
                 {
                     "fulfillmentMessages": [
@@ -58,60 +57,59 @@ app.post('/', (req, res) => {
                     ]
                 }
             )
-        }
+        } else {
+            let result = []
+            let hold = 1
 
-        let result = []
-        let hold = 1
 
-
-        for (let key in noticias) {
-            if (hold <= 10) {
-                hold++
-                let a = {
-                    "subtitle": noticias[key].descricao.slice(0, 100),
-                    "default_action": {
-                        "type": "web_url",
-                        "webview_height_ratio": "tall",
-                        "url": `https://casper-51987.web.app/view/${intent}/${key}`
-                    },
-                    "buttons": [
-                        {
-                            "url": `https://casper-51987.web.app/view/${intent}/${key}`,
+            for (let key in noticias) {
+                if (hold <= 10) {
+                    hold++
+                    let a = {
+                        "subtitle": noticias[key].descricao.slice(0, 100),
+                        "default_action": {
                             "type": "web_url",
-                            "title": "Acessar notícia"
+                            "webview_height_ratio": "tall",
+                            "url": `https://casper-51987.web.app/view/${intent}/${key}/`
                         },
-                    ],
-                    "image_url": noticias[key].image,
-                    "title": noticias[key].titulo
+                        "buttons": [
+                            {
+                                "url": `https://casper-51987.web.app/view/${intent}/${key}/`,
+                                "type": "web_url",
+                                "title": "Acessar notícia"
+                            },
+                        ],
+                        "image_url": noticias[key].image,
+                        "title": noticias[key].titulo
+                    }
+                    result.push(a)
+                } else {
+                    break
                 }
-                result.push(a)
-            } else {
-                break
             }
-        }
 
-        res.send(
-            {
-                "fulfillmentMessages": [
-                    {
-                        "payload": {
-                            "facebook": {
-                                "attachment": {
-                                    "type": "template",
-                                    "payload": {
-                                        "template_type": "generic",
-                                        "elements": result
+            res.send(
+                {
+                    "fulfillmentMessages": [
+                        {
+                            "payload": {
+                                "facebook": {
+                                    "attachment": {
+                                        "type": "template",
+                                        "payload": {
+                                            "template_type": "generic",
+                                            "elements": result
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                ]
-            }
-        );
-    });
-
-});
+                    ]
+                }
+            )
+        }
+    })
+})
 
 // Expose Express API as a single Cloud Function:
 exports.webhook = functions.https.onRequest(app);

@@ -13,7 +13,7 @@ export default function Home() {
     useEffect(() => {
         onValue(dbRef(db, 'noticias'), (snapshot) => {
             const data = snapshot.val();
-            setNoticias(data);
+            setNoticias(flaternObject(data));
             setIsLoading(false);
         })
     }, [])
@@ -59,26 +59,22 @@ export default function Home() {
         )
     }
 
+    const flaternObject = (object) => {
+        let objeto = {};
+        for (let key in object) {
+            objeto = {...objeto, ...object[key]}
+        }
+        return objeto;
+    }
+
     return (
         <div className="container">
             <section>
                 <div className="row gx-lg-5 d-flex" style={{justifyContent: "space-evenly"}}>
                     {isLoading && <img src={loading2} alt={"loading"}/>}
                     {
-                        noticias?.esportes && Object.keys(noticias?.esportes)
-                            .map((key) => renderNoticias(key, noticias?.esportes[key]))
-                    }
-                    {
-                        noticias?.politica && Object.keys(noticias?.politica)
-                            .map((key) => renderNoticias(key, noticias?.politica[key]))
-                    }
-                    {
-                        noticias?.entretenimento && Object.keys(noticias?.entretenimento)
-                            .map((key) => renderNoticias(key, noticias?.entretenimento[key]))
-                    }
-                    {
-                        noticias?.famosos && Object.keys(noticias?.famosos)
-                            .map((key) => renderNoticias(key, noticias?.famosos[key]))
+                        noticias && Object.keys(noticias)
+                            .map((key) => renderNoticias(key, noticias[key]))
                     }
                 </div>
             </section>
