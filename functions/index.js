@@ -59,34 +59,31 @@ app.post('/', (req, res) => {
             )
         } else {
             let result = []
-            let hold = 1
 
+            let keys = Object.keys(noticias)
+            keys.sort(() => Math.random() - 0.5)
+            keys = keys.slice(0, 10)
 
-            for (let key in noticias) {
-                if (hold <= 10) {
-                    hold++
-                    let a = {
-                        "subtitle": noticias[key].descricao.slice(0, 100),
-                        "default_action": {
+            keys.forEach(key => {
+                let a = {
+                    "subtitle": noticias[key].descricao.slice(0, 100),
+                    "default_action": {
+                        "type": "web_url",
+                        "webview_height_ratio": "tall",
+                        "url": `https://casper-51987.web.app/view/${intent}/${key}/`
+                    },
+                    "buttons": [
+                        {
+                            "url": `https://casper-51987.web.app/view/${intent}/${key}/`,
                             "type": "web_url",
-                            "webview_height_ratio": "tall",
-                            "url": `https://casper-51987.web.app/view/${intent}/${key}/`
+                            "title": "Acessar notícia"
                         },
-                        "buttons": [
-                            {
-                                "url": `https://casper-51987.web.app/view/${intent}/${key}/`,
-                                "type": "web_url",
-                                "title": "Acessar notícia"
-                            },
-                        ],
-                        "image_url": noticias[key].image,
-                        "title": noticias[key].titulo
-                    }
-                    result.push(a)
-                } else {
-                    break
+                    ],
+                    "image_url": noticias[key].image,
+                    "title": noticias[key].titulo
                 }
-            }
+                result.push(a)
+            })
 
             res.send(
                 {
