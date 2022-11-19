@@ -8,6 +8,8 @@ import FAB from "../components/FloatingButton";
 import {MdAdd} from "react-icons/md";
 import Modal from 'react-bootstrap/Modal';
 import {onAuthStateChanged} from "firebase/auth";
+import {FaTrash, FaEdit, FaImage, FaEye} from "react-icons/fa";
+import loading2 from "../assets/loading2.gif";
 
 export default function AdminHome() {
     const [geralData, setGeralData] = useState({
@@ -28,6 +30,7 @@ export default function AdminHome() {
     const [updateModal, setUpdateModal] = useState(false);
     const [saveModal, setSaveModal] = useState(false);
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
@@ -41,6 +44,7 @@ export default function AdminHome() {
         onValue(dbRef(db, 'noticias'), (snapshot) => {
             const data = snapshot.val();
             setNoticias(flaternObject(data));
+            setIsLoading(false);
         })
     }, [])
 
@@ -118,25 +122,27 @@ export default function AdminHome() {
 
     }
 
-    const handleDelete = async (id, fileName, tipo) => {
-        let a = window.confirm("Tem certeza que deseja deletar essa notícia?")
-        if (a) {
-            const storageRef = ref(storage, 'images/' + fileName)
+    const handleDelete = async (id, fileName, tipo, update = false) => {
+        const storageRef = ref(storage, 'images/' + fileName)
+        if(!update){
+            try{
+                let a = window.confirm("Tem certeza que deseja deletar essa notícia?")
+                if (a) {
+                    toast.warning('Aguarde, em um momento deletaremos sua notícia!', {
+                        position: "bottom-left",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
 
-            toast.warning('Aguarde, em um momento deletaremos sua notícia!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+                    await deleteObject(storageRef)
+                    await remove(dbRef(db, 'noticias/' + tipo + "/" + id))
 
-            deleteObject(storageRef)
-                .catch(() => {
-                    toast.error('Aconteceu um erro ao deletar o arquivo!', {
+                    toast.success('Notícia removida com sucesso!', {
                         position: "bottom-left",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -146,24 +152,23 @@ export default function AdminHome() {
                         progress: undefined,
                         theme: "colored",
                     })
+                }
+            }catch (e){
+                toast.error('Houve um erro ao deleter a notícia!', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
                 })
-                .then(() => {
-                    remove(dbRef(db, 'noticias/' + tipo + "/" + id))
-                        .then(() => {
-                            toast.success('Notícia removida com sucesso!', {
-                                position: "bottom-left",
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                theme: "colored",
-                            })
-                        })
-                })
-
+            }
+        }else {
+            await remove(dbRef(db, 'noticias/' + tipo + "/" + id))
         }
+
     }
 
     //create a function to and objects into a single object
@@ -188,32 +193,54 @@ export default function AdminHome() {
                 theme: "colored",
             });
             const file = imageUpdate.current.files[0];
-            if (file) {
-                const storageRef = ref(storage, file.name);
+            try {
+                const holdItem = noticias[selectedKey];
+                await handleDelete(selectedKey, noticias[selectedKey].file, noticias[selectedKey].categoria, true)
+                if (file) {
+                    const oldStoragRef = ref(storage, 'images/' + holdItem.file)
+                    const storagRef = ref(storage, 'images/' + file.name)
 
-                await uploadBytes(storageRef, file)
+                    await uploadBytes(storagRef, file)
 
-                const imageURL = await getDownloadURL(storageRef)
+                    const imageURL = await getDownloadURL(storagRef)
 
-                await update(dbRef(db, 'noticias/' + geralUpdateData.categoria + "/" + selectedKey), {
-                    image: imageURL,
-                    file: file.name, ...geralUpdateData
-                })
-            } else {
-                await update(dbRef(db, 'noticias/' + geralUpdateData.categoria + "/" + selectedKey), geralUpdateData)
+                    await update(dbRef(db, 'noticias/' + geralUpdateData.categoria + "/" + selectedKey), {
+                        ...geralUpdateData,
+                        image: imageURL,
+                        file: file.name
+                    })
+                    await deleteObject(oldStoragRef)
+                } else {
+                    await update(dbRef(db, 'noticias/' + geralUpdateData.categoria + "/" + selectedKey), {
+                        ...holdItem, ...geralUpdateData
+                    })
+                }
+                toast.success('Eba! Notícia atualizada com sucesso!', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                setUpdateModal(false)
+            }catch (e){
+                toast.error('Houve um erro ao atualizar sua notícia!', {
+                    position: "bottom-left",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             }
 
-            toast.success('Eba! Notícia atualizada com sucesso!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-            setUpdateModal(false)
+
+
         } else {
             toast.error('Preencha todos os campos com informações válidas!', {
                 position: "bottom-left",
@@ -237,9 +264,16 @@ export default function AdminHome() {
         },
     ];
 
+    if (isLoading) {
+        return (
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <img src={loading2} alt={"loading"}/>
+            </div>
+        )
+    }
 
     return (
-        <div className={"container"}>
+        <>
             <ToastContainer
                 position="bottom-left"
                 autoClose={5000}
@@ -274,23 +308,31 @@ export default function AdminHome() {
                                     <tr key={key}>
                                         <td>{index + 1}</td>
                                         <td>{noticias[key].titulo}</td>
-                                        <td>{noticias[key].descricao.slice(0, 40)}...</td>
+                                        <td>{noticias[key].descricao.slice(0, 100)}...</td>
                                         <td>{noticias[key].categoria}</td>
-                                        <td><a href={noticias[key].image}>Acessar imagem</a></td>
-                                        <td><Link className={"btn btn-success"}
-                                                  to={"../view/" + noticias[key].categoria + "/" + key}>Visualizar</Link>
+                                        <td>
+                                            <a href={noticias[key].image}>
+                                                <FaImage size={30}/>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <Link to={"../view/" + noticias[key].categoria + "/" + key}>
+                                                <FaEye size={30} style={{color: 'green'}}/>
+                                            </Link>
                                         </td>
                                         <td>
                                             <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
-                                                <button className={"btn btn-danger"}
-                                                        onClick={() => handleDelete(key, noticias[key].file, noticias[key].categoria)}>Excluir
+                                                <button className={"btn btn-danger me-1"}
+                                                        onClick={() => handleDelete(key, noticias[key].file, noticias[key].categoria)}>
+                                                    <FaTrash size={20}/>
                                                 </button>
                                                 <button className={"btn btn-warning"} data-bs-toggle="modal"
                                                         data-bs-target="#editmodal" onClick={() => {
                                                     setGeralUpdateData(noticias[key])
                                                     setSelectedKey(key)
                                                     setUpdateModal(true)
-                                                }}>Editar
+                                                }}>
+                                                    <FaEdit size={20}/>
                                                 </button>
                                             </div>
                                         </td>
@@ -321,6 +363,7 @@ export default function AdminHome() {
                     </div>
 
                     <label htmlFor="categoria" className="form-label">Categoria</label>
+
                     <select value={geralData.categoria} onChange={handleTextChange("categoria")}
                             name={"categoria"}
                             className="form-select" aria-label="Default select example">
@@ -340,7 +383,7 @@ export default function AdminHome() {
 
                     <label htmlFor="descricao" className="form-label">Imagem</label>
                     <div className="input-group">
-                        <input onChange={handleTextChange("imagem")} ref={image} name={"Imagem"} type="file"
+                        <input ref={image} name={"Imagem"} type="file"
                                className="form-control"
                                accept={"image/*"}
                                id="inputGroupFile04"
@@ -395,7 +438,7 @@ export default function AdminHome() {
 
                     <label htmlFor="descricao" className="form-label">Imagem</label>
                     <div className="input-group">
-                        <input ref={imageUpdate} name={"Imagem"} type="file" className="form-control"
+                        <input ref={imageUpdate} name={"updateImage"} type="file" className="form-control"
                                id="inputGroupFile04"
                                accept={"image/*"}
                                aria-describedby="inputGroupFileAddon04" aria-label="Upload"/>
@@ -415,6 +458,6 @@ export default function AdminHome() {
                 </Modal.Footer>
 
             </Modal>
-        </div>
+        </>
     )
 }

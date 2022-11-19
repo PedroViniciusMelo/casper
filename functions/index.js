@@ -48,10 +48,32 @@ app.post('/', (req, res) => {
                 {
                     "fulfillmentMessages": [
                         {
-                            "text": {
-                                "text": [
-                                    "Me desculpe, ainda não possuo conhecimento sobre notícias dessa área no momento."
-                                ]
+                            "payload": {
+                                "facebook": {
+                                    "text": "Me desculpe, ainda não possuo conhecimento sobre notícias dessa área no momento. Gostaria de tentar outra categoria?",
+                                    "quick_replies": [
+                                        {
+                                            "title": "Esportes",
+                                            "content_type": "text",
+                                            "payload": "Esportes"
+                                        },
+                                        {
+                                            "title": "Política",
+                                            "content_type": "text",
+                                            "payload": "Política"
+                                        },
+                                        {
+                                            "title": "Entretenimento",
+                                            "content_type": "text",
+                                            "payload": "Entretenimento"
+                                        },
+                                        {
+                                            "title": "Famosos",
+                                            "content_type": "text",
+                                            "payload": "Famosos"
+                                        }
+                                    ]
+                                }
                             }
                         }
                     ]

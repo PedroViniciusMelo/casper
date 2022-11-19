@@ -20,13 +20,14 @@ export default function Home() {
 
     const renderNoticias = (key, noticia) => {
         return (
-            <div key={key} className="col-lg-3 col-md-12 mb-4 mb-1 me-3" style={{backgroundColor: 'white', borderRadius: 50, overflow: 'hidden'}}>
+            <div key={key} className="col-lg-3 col-md-12 mb-4 mb-1 mx-1 mx-sm-3"
+                 style={{backgroundColor: 'white', borderRadius: 50, overflow: 'hidden'}}>
                 <div>
                     <div
                         className="bg-image hover-overlay shadow-1-strong ripple rounded-5 mb-4"
                         data-mdb-ripple-color="light">
                         <img alt={"teste de imnage"}
-                             style={{height: 300, width: '100%', objectFit: 'cover'}}
+                             style={{height: 200, width: '100%', objectFit: 'cover'}}
                              src={noticia.image}
                              className="img-fluid"/>
                         <div className={"text-decoration-none"}>
@@ -38,7 +39,7 @@ export default function Home() {
                     <div className="row mb-3">
                         <div className="col-6">
                             <p className={`text-decoration-none ${getLayout(noticia.categoria)}`}>
-                                <Icon name={noticia.categoria} />
+                                <Icon name={noticia.categoria}/>
                                 {capitalizeFirst(noticia.categoria)}
                             </p>
                         </div>
@@ -48,12 +49,10 @@ export default function Home() {
                         <h5>{noticia.titulo}</h5>
 
                         <p>
-                            {noticia.descricao.slice(0, 400)}...
+                            {noticia.descricao.slice(0, 250)}...
                             <span className={"text-primary"}>Ler mais</span>
                         </p>
                     </Link>
-
-                    <hr/>
                 </div>
             </div>
         )
@@ -67,17 +66,22 @@ export default function Home() {
         return objeto;
     }
 
+    if (isLoading) {
+        return (
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <img src={loading2} alt={"loading"}/>
+            </div>
+        )
+    }
+
     return (
-        <div className="container">
-            <section>
-                <div className="row gx-lg-5 d-flex" style={{justifyContent: "space-evenly"}}>
-                    {isLoading && <img src={loading2} alt={"loading"}/>}
-                    {
-                        noticias && Object.keys(noticias)
-                            .map((key) => renderNoticias(key, noticias[key]))
-                    }
-                </div>
-            </section>
-        </div>
+        <section>
+            <div className="row gx-lg-5 d-flex" style={{justifyContent: "space-evenly"}}>
+                {
+                    noticias && Object.keys(noticias)
+                        .map((key) => renderNoticias(key, noticias[key]))
+                }
+            </div>
+        </section>
     )
 }

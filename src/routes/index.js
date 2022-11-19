@@ -25,12 +25,11 @@ export default function Routes() {
     return (
         <Router>
             <Header user={user}/>
-            <div style={{marginTop: '3%', marginBottom: '6%'}}>
+            <div style={{marginTop: '3%', marginBottom: '6%'}} className={"container"}>
                 <RouterRoutes path={"/"}>
                     <Route index element={<Home/>}/>
                     <Route path={'login'} element={<Login/>}/>
                     <Route path={'admin'} element={<AdminHome/>}/>
-                    <Route path={'esportes'} element={<AdminHome/>}/>
                     <Route path={"view/:tipo/:id"} element={<ViewNews/>}/>
                 </RouterRoutes>
             </div>
